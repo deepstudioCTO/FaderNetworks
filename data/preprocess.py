@@ -19,29 +19,19 @@ def preprocess_images():
         return
 
     print("Reading images from img_align_celeba/ ...")
-    raw_images = []
+    data = np.zeros([N_IMAGES, 3, IMG_SIZE, IMG_SIZE], dtype=np.uint8)
     for i in range(1, N_IMAGES + 1):
         if i % 10000 == 0:
             print(i)
-        raw_images.append(mpimg.imread('img_align_celeba/%06i.jpg' % i)[20:-20])
-
-    if len(raw_images) != N_IMAGES:
-        raise Exception("Found %i images. Expected %i" % (len(raw_images), N_IMAGES))
-
-    print("Resizing images ...")
-    all_images = []
-    for i, image in enumerate(raw_images):
-        if i % 10000 == 0:
-            print(i)
+        image = mpimg.imread('img_align_celeba/%06i.jpg' % i)[20:-20]
         assert image.shape == (178, 178, 3)
         if IMG_SIZE < 178:
             image = cv2.resize(image, (IMG_SIZE, IMG_SIZE), interpolation=cv2.INTER_AREA)
         elif IMG_SIZE > 178:
             image = cv2.resize(image, (IMG_SIZE, IMG_SIZE), interpolation=cv2.INTER_LANCZOS4)
         assert image.shape == (IMG_SIZE, IMG_SIZE, 3)
-        all_images.append(image)
+        data[i - 1, ...] = image.transpose((2, 0, 1))
 
-    data = np.concatenate([img.transpose((2, 0, 1))[None] for img in all_images], 0)
     data = torch.from_numpy(data)
     assert data.size() == (N_IMAGES, 3, IMG_SIZE, IMG_SIZE)
 
