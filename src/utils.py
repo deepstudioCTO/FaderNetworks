@@ -8,6 +8,7 @@
 import os
 import re
 import pickle
+import time
 import random
 import inspect
 import argparse
@@ -168,6 +169,10 @@ def clip_grad_norm(parameters, max_norm, norm_type=2):
         p.grad.data.mul_(clip_coef)
 
 
+def get_timestamp() :
+    now = time.localtime()
+    return "%04d_%02d_%02d_%02d%02d%02d" % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec)
+        
 def get_dump_path(params):
     """
     Create a directory to store the experiment.
@@ -179,13 +184,20 @@ def get_dump_path(params):
     if not os.path.exists(sweep_path):
         subprocess.Popen("mkdir %s" % sweep_path, shell=True).wait()
 
+    sweep_path = os.path.join(MODELS_PATH, params.name, params.model_type)
+    if not os.path.exists(sweep_path):
+        subprocess.Popen("mkdir %s" % sweep_path, shell=True).wait()
+        
+    timestamp = get_timestamp()
+    dump_path = os.path.join(MODELS_PATH, params.name, params.model_type, timestamp)
+    
     # create a random name for the experiment
-    chars = 'abcdefghijklmnopqrstuvwxyz0123456789'
-    while True:
-        exp_id = ''.join(random.choice(chars) for _ in range(10))
-        dump_path = os.path.join(MODELS_PATH, params.name, exp_id)
-        if not os.path.isdir(dump_path):
-            break
+#     chars = 'abcdefghijklmnopqrstuvwxyz0123456789'
+#     while True:
+#         exp_id = ''.join(random.choice(chars) for _ in range(10))
+#         dump_path = os.path.join(MODELS_PATH, params.name, exp_id)
+#         if not os.path.isdir(dump_path):
+#             break
 
     # create the dump folder
     if not os.path.isdir(dump_path):

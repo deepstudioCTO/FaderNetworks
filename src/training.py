@@ -12,6 +12,7 @@ from torch.autograd import Variable
 from torch.nn import functional as F
 from logging import getLogger
 
+from .interpolater import interpolate
 from .utils import get_optimizer, clip_grad_norm, get_lambda, reload_model
 from .model import get_attr_loss, flip_attributes
 
@@ -242,21 +243,41 @@ class Trainer(object):
         if self.params.n_clf_dis:
             save(self.clf_dis, 'clf_dis')
 
+    def show_test(self, name, epoch) :
+        model_path = os.path.join(self.params.dump_path, '%s_%s.pth' % (name, 'ae'))
+        
+        if not os.path.isfile(model_path) :
+            return
+        
+        output_path = os.path.join(self.params.dump_path, '%08i.png' % (epoch))
+        
+        interpolate(name=self.params.name,
+                    model_path=model_path, 
+                    n_images=30, 
+                    n_interpolations=10, 
+                    alpha_min=2.0, 
+                    alpha_max=2.0, 
+                    output_path=output_path)
+        
     def save_best_periodic(self, to_log):
         """
         Save the best models / periodically save the models.
         """
-        if to_log['ae_loss'] < self.best_loss:
-            self.best_loss = to_log['ae_loss']
-            logger.info('Best reconstruction loss: %.5f' % self.best_loss)
-            self.save_model('best_rec')
-        if self.params.eval_clf and np.mean(to_log['clf_accu']) > self.best_accu:
-            self.best_accu = np.mean(to_log['clf_accu'])
-            logger.info('Best evaluation accuracy: %.5f' % self.best_accu)
-            self.save_model('best_accu')
-        if to_log['n_epoch'] % 5 == 0 and to_log['n_epoch'] > 0:
-            self.save_model('periodic-%i' % to_log['n_epoch'])
+#         if to_log['ae_loss'] < self.best_loss:
+#             self.best_loss = to_log['ae_loss']
+#             logger.info('Best reconstruction loss: %.5f' % self.best_loss)
+#             self.save_model('best_rec')
+#         if self.params.eval_clf and np.mean(to_log['clf_accu']) > self.best_accu:
+#             self.best_accu = np.mean(to_log['clf_accu'])
+#             logger.info('Best evaluation accuracy: %.5f' % self.best_accu)
+#             self.save_model('best_accu')
+#         if to_log['n_epoch'] % 50 == 0 and to_log['n_epoch'] > 0:
+#             self.save_model('periodic-%i' % to_log['n_epoch'])
 
+        if to_log['n_epoch'] % 50 == 0 and to_log['n_epoch'] > 0:
+            model_name = 'checkpoint'
+            self.save_model(model_name)
+            self.show_test(model_name, to_log['n_epoch'])
 
 def classifier_step(classifier, optimizer, data, params, costs):
     """

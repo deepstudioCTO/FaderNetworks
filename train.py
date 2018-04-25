@@ -91,6 +91,7 @@ parser.add_argument("--eval_clf", type=str, default="",
 parser.add_argument("--debug", type=bool_flag, default=False,
                     help="Debug mode (only load a subset of the whole dataset)")
 params = parser.parse_args()
+params.model_type = "train"
 
 # check parameters
 check_attr(params)

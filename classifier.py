@@ -55,6 +55,8 @@ parser.add_argument("--debug", type=bool_flag, default=False,
                     help="Debug mode (only load a subset of the whole dataset)")
 params = parser.parse_args()
 
+params.model_type = "classifier"
+
 # check parameters
 check_attr(params)
 assert len(params.name.strip()) > 0
@@ -83,10 +85,8 @@ def save_model(name):
     logger.info('Saving the classifier to %s ...' % path)
     torch.save(classifier, path)
 
-
 # best accuracy
 best_accu = -1e12
-
 
 for n_epoch in range(params.n_epochs):
 
@@ -126,7 +126,8 @@ for n_epoch in range(params.n_epochs):
         best_accu = np.mean(valid_accu)
         logger.info('Best validation average accuracy: %.5f' % best_accu)
         save_model('best')
-    elif n_epoch % 10 == 0 and n_epoch > 0:
+    elif n_epoch % 9 == 0 and n_epoch > 0:
+#     elif n_epoch % 10 == 0 and n_epoch > 0:
         save_model('periodic-%i' % n_epoch)
 
     logger.info('End of epoch %i.\n' % n_epoch)

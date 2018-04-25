@@ -14,19 +14,19 @@ from logging import getLogger
 
 logger = getLogger()
 
+AVAILABLE_ATTR = ["is_target"]
+# AVAILABLE_ATTR = [
+#     "5_o_Clock_Shadow", "Arched_Eyebrows", "Attractive", "Bags_Under_Eyes", "Bald",
+#     "Bangs", "Big_Lips", "Big_Nose", "Black_Hair", "Blond_Hair", "Blurry", "Brown_Hair",
+#     "Bushy_Eyebrows", "Chubby", "Double_Chin", "Eyeglasses", "Goatee", "Gray_Hair",
+#     "Heavy_Makeup", "High_Cheekbones", "Male", "Mouth_Slightly_Open", "Mustache",
+#     "Narrow_Eyes", "No_Beard", "Oval_Face", "Pale_Skin", "Pointy_Nose",
+#     "Receding_Hairline", "Rosy_Cheeks", "Sideburns", "Smiling", "Straight_Hair",
+#     "Wavy_Hair", "Wearing_Earrings", "Wearing_Hat", "Wearing_Lipstick",
+#     "Wearing_Necklace", "Wearing_Necktie", "Young"
+# ]
 
-AVAILABLE_ATTR = [
-    "5_o_Clock_Shadow", "Arched_Eyebrows", "Attractive", "Bags_Under_Eyes", "Bald",
-    "Bangs", "Big_Lips", "Big_Nose", "Black_Hair", "Blond_Hair", "Blurry", "Brown_Hair",
-    "Bushy_Eyebrows", "Chubby", "Double_Chin", "Eyeglasses", "Goatee", "Gray_Hair",
-    "Heavy_Makeup", "High_Cheekbones", "Male", "Mouth_Slightly_Open", "Mustache",
-    "Narrow_Eyes", "No_Beard", "Oval_Face", "Pale_Skin", "Pointy_Nose",
-    "Receding_Hairline", "Rosy_Cheeks", "Sideburns", "Smiling", "Straight_Hair",
-    "Wavy_Hair", "Wearing_Earrings", "Wearing_Hat", "Wearing_Lipstick",
-    "Wearing_Necklace", "Wearing_Necktie", "Young"
-]
-
-DATA_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data')
+DATA_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'processed_data')
 
 
 def log_attributes_stats(train_attributes, valid_attributes, test_attributes, params):
@@ -50,10 +50,15 @@ def load_images(params):
     Load celebA dataset.
     """
     # load data
-    images_filename = 'images_%i_%i_20000.pth' if params.debug else 'images_%i_%i.pth'
-    images_filename = images_filename % (params.img_sz, params.img_sz)
-    images = torch.load(os.path.join(DATA_PATH, images_filename))
-    attributes = torch.load(os.path.join(DATA_PATH, 'attributes.pth'))
+    images_filename = '%s_images_%i_%i.pth'
+    # images_filename = 'images_%i_%i_20000.pth' if params.debug else 'images_%i_%i.pth'
+    images_filename = images_filename % (params.name, params.img_sz, params.img_sz)
+    images = torch.load(os.path.join(DATA_PATH, params.name, images_filename))
+    
+    attributes_filename = '%s_attributes.pth'
+    attributes_filename = attributes_filename % params.name
+    attributes = torch.load(os.path.join(DATA_PATH, params.name, attributes_filename))
+    # attributes = torch.load(os.path.join(DATA_PATH, 'attributes.pth'))
 
     # parse attributes
     attrs = []
@@ -70,12 +75,18 @@ def load_images(params):
         train_index = 162770
         valid_index = 162770 + 19867
         test_index = len(images)
-    train_images = images[:train_index]
-    valid_images = images[train_index:valid_index]
-    test_images = images[valid_index:test_index]
-    train_attributes = attributes[:train_index]
-    valid_attributes = attributes[train_index:valid_index]
-    test_attributes = attributes[valid_index:test_index]
+    train_images = images[:]
+    valid_images = images[:]
+    test_images = images[:]
+    train_attributes = attributes[:]
+    valid_attributes = attributes[:]
+    test_attributes = attributes[:]
+#     train_images = images[:train_index]
+#     valid_images = images[train_index:valid_index]
+#     test_images = images[valid_index:test_index]
+#     train_attributes = attributes[:train_index]
+#     valid_attributes = attributes[train_index:valid_index]
+#     test_attributes = attributes[valid_index:test_index]
     # log dataset statistics / return dataset
     logger.info('%i / %i / %i images with attributes for train / valid / test sets'
                 % (len(train_images), len(valid_images), len(test_images)))
