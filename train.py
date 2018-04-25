@@ -90,6 +90,14 @@ parser.add_argument("--eval_clf", type=str, default="",
                     help="Load an external classifier for evaluation")
 parser.add_argument("--debug", type=bool_flag, default=False,
                     help="Debug mode (only load a subset of the whole dataset)")
+
+parser.add_argument("--is_target", type=bool, default=False,
+                    help="train batch with target")
+parser.add_argument("--target_ratio", type=float, default=0.5,
+                    help="target ratio for 1 batch")
+parser.add_argument("--n_source", type=int, default=20000,
+                    help="number of source images")
+
 params = parser.parse_args()
 params.model_type = "train"
 

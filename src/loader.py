@@ -116,19 +116,43 @@ class DataSampler(object):
         self.v_flip = params.v_flip
         self.h_flip = params.h_flip
 
+        self.is_target = params.is_target
+        
+        if params.is_target :
+            assert params.target_ratio > 0 and params.target_ratio < 1
+            self.target_batch_size = int(params.batch_size * params.target_ratio)
+            self.source_batch_size = params.batch_size - target_batch_size
+            self.n_source_images = params.n_source_images
+
     def __len__(self):
         """
         Number of images in the object dataset.
         """
         return self.images.size(0)
 
+    def get_random_idx(self, bs) :
+        print('is_target %s'%('on' if self.is_target else 'off'))
+        
+        if self.is_target :
+            source_idx = random.sample(range(0, self.n_source_images), self.source_batch_size)
+            target_idx = random.sample(range(self.n_source_images, len(self.images)), self.target_batch_size)
+            idx = source_idx + target_idx
+            
+            print(source_idx)
+            print(target_idx)
+            
+            random.shuffle(idx)
+            return torch.LongTensor(idx)
+        else :
+            return torch.LongTensor(bs).random_(len(self.images))
+    
     def train_batch(self, bs):
         """
         Get a batch of random images with their attributes.
         """
         # image IDs
-        idx = torch.LongTensor(bs).random_(len(self.images))
-
+        idx = get_random_idx(self, bs)
+        
         # select images / attributes
         batch_x = normalize_images(self.images.index_select(0, idx).cuda())
         batch_y = self.attributes.index_select(0, idx).cuda()
@@ -140,7 +164,7 @@ class DataSampler(object):
             batch_x = batch_x.index_select(3, torch.arange(batch_x.size(3) - 1, -1, -1).long().cuda())
 
         return Variable(batch_x, volatile=False), Variable(batch_y, volatile=False)
-
+    
     def eval_batch(self, i, j):
         """
         Get a batch of images in a range with their attributes.
