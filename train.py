@@ -98,6 +98,13 @@ parser.add_argument("--target_ratio", type=float, default=0.5,
 parser.add_argument("--n_source", type=int, default=20000,
                     help="number of source images")
 
+parser.add_argument("--save_epoch", type=int, default=50,
+                    help="number of epoch to save model")
+parser.add_argument("--test_epoch", type=int, default=50,
+                    help="number of epoch to test")
+parser.add_argument("--eval_epoch", type=int, default=1,
+                    help="number of epoch to test")
+
 params = parser.parse_args()
 params.model_type = "train"
 

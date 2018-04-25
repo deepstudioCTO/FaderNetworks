@@ -274,10 +274,14 @@ class Trainer(object):
 #         if to_log['n_epoch'] % 50 == 0 and to_log['n_epoch'] > 0:
 #             self.save_model('periodic-%i' % to_log['n_epoch'])
 
-        if to_log['n_epoch'] % 50 == 0 and to_log['n_epoch'] > 0:
-            model_name = 'checkpoint'
+        model_name = 'checkpoint'
+        if to_log['n_epoch'] % self.params.save_epoch == 0 and to_log['n_epoch'] > 0:
             self.save_model(model_name)
-            self.show_test(model_name, to_log['n_epoch'])
+            print('save_model')
+            
+#         if to_log['n_epoch'] % self.params.test_epoch == 0 and to_log['n_epoch'] > 0:
+#             self.show_test(model_name, to_log['n_epoch'])
+#             print('show_test')
 
 def classifier_step(classifier, optimizer, data, params, costs):
     """
