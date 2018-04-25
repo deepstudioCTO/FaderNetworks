@@ -6,11 +6,11 @@
 #
 
 import os
+import random
 import numpy as np
 import torch
 from torch.autograd import Variable
 from logging import getLogger
-
 
 logger = getLogger()
 
@@ -121,8 +121,8 @@ class DataSampler(object):
         if params.is_target :
             assert params.target_ratio > 0 and params.target_ratio < 1
             self.target_batch_size = int(params.batch_size * params.target_ratio)
-            self.source_batch_size = params.batch_size - target_batch_size
-            self.n_source_images = params.n_source_images
+            self.source_batch_size = params.batch_size - self.target_batch_size
+            self.n_source_images = params.n_source
 
     def __len__(self):
         """
@@ -130,17 +130,11 @@ class DataSampler(object):
         """
         return self.images.size(0)
 
-    def get_random_idx(self, bs) :
-        print('is_target %s'%('on' if self.is_target else 'off'))
-        
+    def get_random_idx(self, bs) :        
         if self.is_target :
             source_idx = random.sample(range(0, self.n_source_images), self.source_batch_size)
             target_idx = random.sample(range(self.n_source_images, len(self.images)), self.target_batch_size)
             idx = source_idx + target_idx
-            
-            print(source_idx)
-            print(target_idx)
-            
             random.shuffle(idx)
             return torch.LongTensor(idx)
         else :
@@ -151,7 +145,7 @@ class DataSampler(object):
         Get a batch of random images with their attributes.
         """
         # image IDs
-        idx = get_random_idx(self, bs)
+        idx = self.get_random_idx(bs)
         
         # select images / attributes
         batch_x = normalize_images(self.images.index_select(0, idx).cuda())
