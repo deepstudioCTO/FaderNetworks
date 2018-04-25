@@ -99,7 +99,7 @@ def interpolate(name="",
     assert params.n_images >= 1 and params.n_interpolations >= 2
 
     # create logger / load trained model
-    logger = create_logger(None)
+#     logger = create_logger(None)
     ae = torch.load(params.model_path).eval()
 
     # restore main parameters
