@@ -20,6 +20,11 @@ from src.utils import bool_flag
 
 # parse parameters
 parser = argparse.ArgumentParser(description='Attributes swapping')
+parser.add_argument("--name", type=str, default="",
+                    help="Dataset name")
+parser.add_argument("--is_target", type=bool, default=False,
+                    help="istarget")
+
 parser.add_argument("--model_path", type=str, default="",
                     help="Trained model path")
 parser.add_argument("--n_images", type=int, default=10,
