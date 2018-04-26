@@ -92,9 +92,9 @@ python classifier.py
 
 # 추가된 옵션
 --name ""                         # 프로세싱 할 때 넣었던 data_name  ex) angelina_celeba_200k
---is_target False                 # 변신시키고자 하는 타겟이 배치에 일정 비율 이상 들어가도록 하려면 True
---target_ratio 0.5                # 변신시키고자 하는 타겟이 배치에 들어가는 비율  1 > target_ratio > 0
---n_source 20000                  # 타겟을 제외한 소스 이미지의 개수 ex) 셀렙a 전체 개수는 193390
+--is_target True                  # 변신시키고자 하는 타겟이 배치에 일정 비율 이상 들어가도록 하려면 True
+--target_ratio 0.1                # 변신시키고자 하는 타겟이 배치에 들어가는 비율  1 > target_ratio > 0
+--n_source 193390                 # 타겟을 제외한 소스 이미지의 개수 ex) 셀렙a 전체 개수는 193390
 ```
 
 
