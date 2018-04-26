@@ -161,7 +161,29 @@ In the paper, only the first two losses are used, but the two others could impro
 --save_epoch 5                    # 저장 및 테스트 사진 뽑는 이포치
 --eval_epoch 100                  # 어큐러시 뽑는 이포치 (시간 오래걸리므로 너무 자주 하지 않는 것이 좋음)
 ```
-## 커맨드 예시
+## 커맨트
+환경셋팅
+- 순서대로 하면 됨
+
+```bash
+sudo ssh -i [pem파일경로] ubuntu@52.70.65.89        # aws 접속
+
+screen                                            # screen 켜기
+source activate fader_networks                    # 학습 환경 켜기
+# 학습 커맨드 
+ctrl + a 누른 뒤 d                                  # screen 에서 다시 돌아오기 (터미널이 꺼져도 주피터가 계속 돌아가게 할 수 있음)
+
+screen                                            # screen 켜기
+jupyter notebook --ip=* --no-browser              # 주피터 (아직 내 컴에서만 됨)
+ctrl + a 누른 뒤 d                                  # screen 에서 다시 돌아오기 (터미널이 꺼져도 주피터가 계속 돌아가게 할 수 있음)
+
+screen -ls                                        # screen 목록 보기
+screen -r [screen id]                             # screen 돌아가기  ex) screen -r 1464.pts-0.ip-172-31-20-166
+```
+
+학습 커맨드 예시 
+- 아래 예시에는 반드시 넣어야 하는 것들만 넣음
+- 배치내 타겟 비율 바꾸려면 target_ratio 파라미터로 변경, 소스 개수가 바뀌면 n_source 파라미터로 변경 (타겟 : 안젤리나, 소스 : 셀렙a)
 
 ```bash
 python classifier.py --name "angelina_celeba_200k" --img_sz 128 --attr "*" --n_epochs 10 --epoch_size 50000
