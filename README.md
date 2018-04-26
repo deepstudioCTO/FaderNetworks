@@ -171,7 +171,7 @@ sudo ssh -i [pem파일경로] ubuntu@52.70.65.89        # aws 접속
 screen                                            # screen 켜기
 source activate fader_networks                    # 학습 환경 켜기
 # 학습 커맨드 
-ctrl + a 누른 뒤 d                                  # screen 에서 다시 돌아오기 (터미널이 꺼져도 주피터가 계속 돌아가게 할 수 있음)
+ctrl + a 누른 뒤 d                                  # screen 에서 다시 돌아오기 (터미널이 꺼져도 학습 코드가 계속 돌아가게 할 수 있음)
 
 screen                                            # screen 켜기
 jupyter notebook --ip=* --no-browser              # 주피터 (아직 내 컴에서만 됨)
