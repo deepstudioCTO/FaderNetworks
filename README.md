@@ -161,6 +161,12 @@ In the paper, only the first two losses are used, but the two others could impro
 --save_epoch 5                    # 저장 및 테스트 사진 뽑는 이포치
 --eval_epoch 100                  # 어큐러시 뽑는 이포치 (시간 오래걸리므로 너무 자주 하지 않는 것이 좋음)
 ```
+## 커맨드 예시
+
+```bash
+python classifier.py --name "angelina_celeba_200k" --img_sz 128 --attr "*" --n_epochs 10 --epoch_size 50000
+python train.py --name "angelina_celeba_200k" --img_sz 128 --attr "*" --eval_clf models/angelina_celeba_200k/classifier/2018_04_26_065510/best.pth --n_epochs 2000 --epoch_size 50000 --save_epoch 5 --eval_epoch 50
+```
 
 ## Generate interpolations
 
