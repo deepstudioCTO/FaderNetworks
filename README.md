@@ -161,7 +161,7 @@ In the paper, only the first two losses are used, but the two others could impro
 --save_epoch 5                    # 저장 및 테스트 사진 뽑는 이포치
 --eval_epoch 100                  # 어큐러시 뽑는 이포치 (시간 오래걸리므로 너무 자주 하지 않는 것이 좋음)
 ```
-## 커맨트
+## 커맨드
 환경셋팅
 - 순서대로 하면 됨
 
