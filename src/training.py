@@ -277,11 +277,7 @@ class Trainer(object):
         model_name = 'checkpoint'
         if to_log['n_epoch'] % self.params.save_epoch == 0 and to_log['n_epoch'] > 0:
             self.save_model(model_name)
-            print('save_model')
-            
-#         if to_log['n_epoch'] % self.params.test_epoch == 0 and to_log['n_epoch'] > 0:
-#             self.show_test(model_name, to_log['n_epoch'])
-#             print('show_test')
+            self.show_test(model_name, to_log['n_epoch'])
 
 def classifier_step(classifier, optimizer, data, params, costs):
     """
