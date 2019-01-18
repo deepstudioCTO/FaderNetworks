@@ -26,9 +26,11 @@ def preprocess_images():
         image = mpimg.imread('img_align_celeba/%06i.jpg' % i)[20:-20]
         assert image.shape == (178, 178, 3)
         if IMG_SIZE < 178:
-            image = cv2.resize(image, (IMG_SIZE, IMG_SIZE), interpolation=cv2.INTER_AREA)
+            image = cv2.resize(image, (IMG_SIZE, IMG_SIZE),
+                               interpolation=cv2.INTER_AREA)
         elif IMG_SIZE > 178:
-            image = cv2.resize(image, (IMG_SIZE, IMG_SIZE), interpolation=cv2.INTER_LANCZOS4)
+            image = cv2.resize(image, (IMG_SIZE, IMG_SIZE),
+                               interpolation=cv2.INTER_LANCZOS4)
         assert image.shape == (IMG_SIZE, IMG_SIZE, 3)
         data[i - 1, ...] = image.transpose((2, 0, 1))
 
@@ -36,7 +38,8 @@ def preprocess_images():
     assert data.size() == (N_IMAGES, 3, IMG_SIZE, IMG_SIZE)
 
     print("Saving images to %s ..." % IMG_PATH)
-    torch.save(data[:20000].clone(), 'images_%i_%i_20000.pth' % (IMG_SIZE, IMG_SIZE))
+    torch.save(data[:20000].clone(), 'images_%i_%i_20000.pth' % (IMG_SIZE,
+                                                                 IMG_SIZE))
     torch.save(data, IMG_PATH)
 
 
